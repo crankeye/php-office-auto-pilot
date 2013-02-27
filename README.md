@@ -5,7 +5,7 @@ A PHP version of the Office Auto Pilot API.
 
 Installation
 ------------
-- Download "oap-php-api.php" and add the following code to your project:
+Download "oap-php-api.php" and add the following code to your project:
 
     //INCLUDES
     include('path/to/oap-php-api.php');
