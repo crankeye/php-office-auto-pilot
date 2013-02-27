@@ -15,7 +15,7 @@ Download "oap-php-api.php" and add the following code to your project:
     
     $oap = new OAPAPI($api_app_id,$api_key);
 
-- Change the $api_app_id and $api_key to your app_id/key. See Setttings -> Developer Preferences and Resources -> OfficeAutoPilot API Instructions and Key Manager
+- Change the $api_app_id and $api_key to your app_id/key. See "Setttings -> Developer Preferences and Resources -> OfficeAutoPilot API Instructions and Key Manager" or vist: https://www1.moon-ray.com/v2.4/admin.php?action=api
 - Make sure your app_id/key has the correct permissions. 
 
 List of Supported Functions

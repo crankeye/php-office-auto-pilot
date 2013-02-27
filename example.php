@@ -3,7 +3,7 @@
 	* OAP PHP API Examples
 	* @package OAP-PHP-API
 	* @author Neal Lambert
-	* @modified by Neal Lambert 01/20/2013
+	* @modified by Neal Lambert 02/27/2013
 	*/
 	
 	//Visit: https://www1.moon-ray.com/v2.4/admin.php?action=api
