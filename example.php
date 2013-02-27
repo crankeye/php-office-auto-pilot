@@ -15,7 +15,17 @@
 	include('oap-php-api.php');
 	$oap = new OAPAPI($api_app_id,$api_key);
 	
-	//echo '<pre>';
+	echo '<pre>';
+	
+	/**
+	* Add Tags Example
+	* return: (array) of tags [$tag_id] = $tag_name
+	*/
+	//$contacts = array('123');
+	//$tags 	= array('tag1','tag2');
+	//print_r($oap->add_tags($contacts,$tags));
+	//print_r($oap->remove_tags($contacts,$tags));
+
 	
 	/**
 	* Get Account Tags Example
@@ -23,18 +33,20 @@
 	*/
 	//var_dump($oap->pull_tag());
 	
+	
 	/**
 	* Get Contacts Example
-	* @method: 	fetch
-	* @service: contact
-	* @data: 	array of contact id's to be fetched.
 	*/
 	
+	//SINGLE
+	//$contacts = array('123');
+	//$return = $oap->fetch('contact',$contacts);
+	
+	//OR MULTIPLE
+	//$contacts = array('123','456');
+	//$return = $oap->fetch('contact',$contacts);
+	
 	/*
-	$return = $oap->fetch('contact',array('XXX','YYY'));
-	
-	
-	
 	if(!empty($return->contact))
 	{
 		foreach($return->contact as $record)
@@ -78,12 +90,37 @@
 	}
 	*/
 	
-	//OTHER EXAMPLES
+	
+	/**
+	* Get A List of Sequences
+	*/
+	
+	//print_r($oap->fetch_sequences_type());
+
+	
+	/**
+	* Start/Stop a Sequence
+	*/
+	
+	//SINGLE
+	//$sequences = array('1');
+	//$contacts  = array('123');
+	
+	//MULTIPLE
+	//$sequences = array('1','2');
+	//$contacts  = array('123','456');
+	
+	//print_r($oap->start_sequences($contacts,$sequences));
+	//print_r($oap->stop_sequences($contacts,$sequences));
+	
+	
+	/**
+	* Other Examples
+	*/
+	
 	//print_r($oap->key_type('product'));
 	//print_r($oap->fetch_tags_type());
-	//print_r($oap->fetch_sequences_type());
-	//$oap->search('contact', array('field' => 'First Name', 'op' => 'c', 'value' => 'K'));
 	
-	//echo '</pre>';
+	echo '</pre>';
 	
 ?>

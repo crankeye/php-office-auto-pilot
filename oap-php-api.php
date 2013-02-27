@@ -66,7 +66,7 @@ class OAPAPI {
   
 	/**
 	* Fetch (contact,product,form)
-	* @desc: This is return a list of tags that you can use in your system
+	* @desc: Allows you to fetch contacts, products, and forms from OAP.
 	* @params:  $type (string) - contact,product,form; $data (array)(contact,product) or (string) for (form)
 	* @access:  public
 	* @return:  array of contacts, or products
@@ -103,6 +103,95 @@ class OAPAPI {
 	}
   
 	/**
+	* Add Tags (contact)
+	* @desc: Add a tag(s) to a contact record.
+	* @access:  public
+	* @params:  $contacts (array)	= an array containing a contact id(s)
+				$tags (array)		= an array containing a list of tags(s)
+				$remove (boolean) - When set to TRUE instead removes the tag(s)
+	* @return:  (SimpleXMLObject) "result" containing each tag and the success/failure status
+	*/
+
+	public function add_tags($contacts=array(),$tags=array(),$remove=FALSE)
+	{
+		$data = '';
+		
+		//PREPARE XML TO SEND
+		foreach($contacts as $contact_id)
+		{
+			$data .= "<contact id='".$contact_id."'>
+			";
+			
+			foreach($tags as $tag)
+				$data .= '<tag>'.$tag."</tag>";
+			
+			$data .= "</contact>";
+		}
+
+		//SAVE RESULT
+		return $this->_request($this->contact,(!$remove ? 'add_tag' : 'remove_tag'),$data);
+	}
+	
+	/**
+	* Remove Tags (contact)
+	* @desc: Removes a tag(s) from a contact record.
+	* @access:  public
+	* @params:  $contacts (array)	= an array containing a contact id(s)
+				$tags (array)		= an array containing a list of tags(s)
+	* @return:  (SimpleXMLObject) "result" containing each tag and the success/failure status
+	*/
+
+	public function remove_tags($contacts=array(),$tags=array())
+	{
+		return $this->add_tags($contacts,$tags,TRUE);
+	}
+	
+	/**
+	* Start Sequences (contact)
+	* @desc: Starts a sequence(s) for a contact record.
+	* @access:  public
+	* @params:  $contacts (array) = an array containing a contact id with an array of tags to be added
+				e.g. array('1234' => array('Newsletter','New Client'))
+				$remove (boolean) - When set to TRUE instead removes the tag(s)
+	* @return:  (SimpleXMLObject) "result" containing each updated contact record
+	*/
+
+	public function start_sequences($contacts=array(),$sequences=array(),$remove=FALSE)
+	{
+		$data = '';
+		
+		//PREPARE XML TO SEND
+		foreach($contacts as $contact_id)
+		{
+			$data .= "<contact id='".$contact_id."'>";
+			$data .= "<Group_Tag name='Sequences and Tags'><field name='Tags'></field>";
+			
+			$data .= "<field name='Sequences'".($remove ? " action='remove'" : '').'>*/*'.implode('*/*',$sequences)."*/*</field>";
+			
+			$data .= "</Group_Tag>";
+			$data .= "</contact>";
+		}
+		
+		//SAVE RESULT
+		return $this->_request($this->contact,'update',$data);
+	}
+	
+	/**
+	* Stop Sequences (contact)
+	* @desc: Stops a sequence(s) for a contact record.
+	* @access:  public
+	* @params:  $contacts (array) 	= an array containing a contact id(s)
+				$sequences (array) 	= an array containing a sequence id(s)
+				$remove (boolean) 	- When set to TRUE instead removes the tag(s)
+	* @return:  (SimpleXMLObject) "result" containing each updated contact record
+	*/
+	
+	public function stop_sequences($contacts=array(),$sequences=array())
+	{
+		return $this->start_sequences($contacts,$sequences,TRUE);
+	}
+	
+	/**
 	* Fetch Tags Type (contact)
 	* @desc: List of tag names in the account. Recommended to use Pull Tag instead of this function.
 	* @access:  public
@@ -117,7 +206,6 @@ class OAPAPI {
 		{
 			$tags = explode('*/*',$return->tags);
 	
-		
 			return (is_array($tags) ? array_filter($tags) : $tags);
 		}
 		
@@ -126,7 +214,7 @@ class OAPAPI {
 	
 	/**
 	* Fetch Sequences Type (contact)
-	* @desc: This is return a list of tags that you can use in your system
+	* @desc: Gets a list of available sequences.
 	* @access:  public
 	* @return:  array of sequences e.g. [24] =>  'sequence name which has id 24'
 	*/
@@ -232,7 +320,9 @@ class OAPAPI {
 
 	private function _request($service,$reqType,$data=FALSE,$return_id=FALSE,$f_add=FALSE)
 	{	
-		$postargs = "Appid=".$this->Appid."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=1' : '&return_id=1').($data ? '&data='.urlencode($data) : '').($f_add ? '&f_add=1' : '');
+		$postargs = "Appid=".$this->Appid."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=1' : '&return_id=1').($data ? '&data='.rawurlencode($data) : '').($f_add ? '&f_add=1' : '');
+		
+		//print_r($postargs);
 		
 		$ch = curl_init($this->host.'/'.$service);
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -244,6 +334,7 @@ class OAPAPI {
 		
 		//DEBUG
 		//print_r($output);
+		//exit();
 		
 		return new SimpleXMLElement($output);
 	}
@@ -251,4 +342,4 @@ class OAPAPI {
 }
 
 /* End of file oap-php-api.php */
-/* Location: ./oap-php-api */
+/* Location: ./oap-php-api.php */
