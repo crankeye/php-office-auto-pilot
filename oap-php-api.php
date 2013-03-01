@@ -336,7 +336,7 @@ class OAPAPI {
 		//print_r($output);
 		//exit();
 		
-		return new SimpleXMLElement($output);
+		return (!empty($output) ? new SimpleXMLElement($output) : FALSE );
 	}
 	
 }
