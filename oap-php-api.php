@@ -44,63 +44,106 @@ class OAPAPI {
 	}
 
 	/**
-	* Search (contact,product,form)
+	* Add Contact (contact)
 	* @desc: Search OAP for data
-	* @params:  $type (string) - contact,product,form; $data (array)
+	* @params:  $contact (array) array containing the fields, tags, and sequences to add to a new contact record
 	* @access:  public
-	* @return:  array of contacts, or products
+	* @return:  array of the updated client
 	*/
 
-	public function search($type=FALSE,$data=FALSE)
+	public function add_contact($contact=FALSE)
 	{
-		$data = array('equation' => $data);
 	
-		if($service = $this->_service($type))
+		$data = '<contact>';
+		
+		//FIELDS
+		$data .= '<Group_Tag name="Contact Information">';
+		foreach($contact['fields'] as $field_name => $field_data)
 		{
-			return $this->_request($service,'fetch',$data);
+			$data .= '<field name="'.$field_name.'">'.$field_data.'</field>';
+		}
+		$data .= '</Group_Tag>';
+		
+		//TAGS / SEQUENCES
+		$data .= '<Group_Tag name="Sequences and Tags">';
+			
+			$data .= '<field name="Contact Tags">'.(!empty($contact['tags']) ? '*/*'.implode('*/*',$contact['tags']).'*/*' : '').'</field>';
+			$data .= '<field name="Sequences">'.(!empty($contact['sequences']) ? '*/*'.implode('*/*',$contact['sequences']).'*/*' : '').'</field>';
+		
+		$data .= '</Group_Tag>';
+
+		$data .= '</contact>';
+	
+		if($service = $this->_service('contact'))
+		{
+			return $this->_request($service,'add',$data);
 		}
 		
 		return FALSE;
 	}
-  
-  
+	
 	/**
-	* Fetch (contact,product,form)
-	* @desc: Allows you to fetch contacts, products, and forms from OAP.
-	* @params:  $type (string) - contact,product,form; $data (array)(contact,product) or (string) for (form)
+	* Update Contact(s) (contact)
+	* @desc: Update contact(s) record(s)
+	* @params:  $contact (array) array of multiple contacts to be updated
 	* @access:  public
-	* @return:  array of contacts, or products
+	* @return:  array of updated contacts
 	*/
 
-	public function fetch($type=FALSE,$data=FALSE)
+	public function update_contacts($contacts=FALSE)
 	{
-		if($service = $this->_service($type))
-		{
-			$xml = '';
+		$data = '';
 		
-			switch($service)
+		foreach($contacts as $contact)
+		{
+			$data .= '<contact id="'.$contact['id'].'">';
+		
+			//FIELDS
+			$data .= '<Group_Tag name="Contact Information">';
+			foreach($contact['fields'] as $field_name => $field_data)
 			{
-				//CONTACTS
-				case 'cdata.php':
-					foreach ($data as $contact_id)
-					$xml .= '<contact_id>'.$contact_id.'</contact_id>';
-					break;
-				//PRODUCTS
-				case 'pdata.php':
-					foreach ($data as $product_id)
-					$xml .= '<product_id>'.$product_id.'</product_id>';
-					break;
-				//FORMS
-				case 'fdata.php':
-					$xml .= 'id='.$data;
-					break;
+				$data .= '<field name="'.$field_name.'">'.$field_data.'</field>';
 			}
+			$data .= '</Group_Tag>';
 			
-			return $this->_request($service,'fetch', $xml);
+			$data .= '</contact>';
 		}
+
+		if($service = $this->_service('contact'))
+		{
+			return $this->_request($service,'update',$data);
+		}
+		
 		
 		return FALSE;
 	}
+	
+	/**
+	* Delete Contact(s) (contact)
+	* @desc: Delete the select contact IDs for OAP
+	* @params:  $contact_ids (array)
+	* @access:  public
+	* @return:  a success or error message
+	*/
+
+	public function delete_contacts($contact_ids=FALSE)
+	{
+		$data = '';
+		
+		foreach($contact_ids as $contact_id)
+		{
+			$data .= '<contact_id>'.$contact_id.'</contact_id>';
+		}
+
+		if($service = $this->_service('contact'))
+		{
+			return $this->_request($service,'delete',$data);
+		}
+		
+		
+		return FALSE;
+	}
+  
   
 	/**
 	* Add Tags (contact)
@@ -189,6 +232,78 @@ class OAPAPI {
 	public function stop_sequences($contacts=array(),$sequences=array())
 	{
 		return $this->start_sequences($contacts,$sequences,TRUE);
+	}
+	
+	/**
+	* Search (contact,product,form)
+	* @desc: Search OAP for data
+	* @params:  $type (string) - contact,product,form; $patterns (array) of search queries
+	* @access:  public
+	* @return:  array of contacts, or products
+	*/
+
+	public function search($type=FALSE,$patterns=FALSE)
+	{
+	
+		$data = '<search>';
+		
+		foreach($patterns as $pattern)
+		{
+			$data .= '<equation>';
+				$data .= '<field>'.$pattern['field'].'</field>';
+				$data .= '<op>'.$pattern['op'].'</op>';
+				$data .= '<value>'.$pattern['value'].'</value>';
+			$data .= '</equation>';
+		}
+		
+		$data .= '</search>';
+	
+		
+	
+		if($service = $this->_service($type))
+		{
+			return $this->_request($service,'search',$data);
+		}
+		
+		return FALSE;
+	}
+	
+	/**
+	* Fetch (contact,product,form)
+	* @desc: Allows you to fetch contacts, products, and forms from OAP.
+	* @params:  $type (string) - contact,product,form; $data (array)(contact,product) or (string) for (form)
+	* @access:  public
+	* @return:  array of contacts, or products
+	*/
+
+	public function fetch($type=FALSE,$data=FALSE)
+	{
+		if($service = $this->_service($type))
+		{
+			$xml = '';
+		
+			switch($service)
+			{
+				//CONTACTS
+				case 'cdata.php':
+					foreach ($data as $contact_id)
+					$xml .= '<contact_id>'.$contact_id.'</contact_id>';
+					break;
+				//PRODUCTS
+				case 'pdata.php':
+					foreach ($data as $product_id)
+					$xml .= '<product_id>'.$product_id.'</product_id>';
+					break;
+				//FORMS
+				case 'fdata.php':
+					$xml .= 'id='.$data;
+					break;
+			}
+			
+			return $this->_request($service,'fetch', $xml);
+		}
+		
+		return FALSE;
 	}
 	
 	/**
