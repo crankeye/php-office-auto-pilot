@@ -3,7 +3,8 @@
 	* OAP PHP API Examples
 	* @package OAP-PHP-API
 	* @author Neal Lambert
-	* @modified by Neal Lambert 02/27/2013
+	* @modified by Neal Lambert 04/25/2013
+	* @api_docs https://officeautopilot.zendesk.com/forums/20723902-API
 	*/
 	
 	//Visit: https://www1.moon-ray.com/v2.4/admin.php?action=api
@@ -28,7 +29,7 @@
 	
 	/* 
 	  Multiple search queries work as an AND
-	  Muttiple values can be separated by a comma
+	  Multiple field values can be separated by a comma
 		
 	  Available Operators:
 		'e' Equal
@@ -176,7 +177,7 @@
 	
 	
 	/**
-	* Get Contacts Example
+	* Get Contact(s) Example
 	*/
 	
 	//SINGLE
