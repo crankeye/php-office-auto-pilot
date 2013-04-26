@@ -7,7 +7,7 @@
  *
  * @package: 	OAP-PHP-API
  * @author: 	Neal Lambert
- * @last_mod: 	by Neal Lambert 01/30/2013
+ * @last_mod: 	by Neal Lambert 04/25/2013
  * @url: 		http://officeautopilot.com/
  * @api_url: 	http://officeautopilot.com/wp-content/uploads/2010/10/API_reference.pdf
  * @see_also: 	http://support.officeautopilot.com/entries/22308086-contacts-api
