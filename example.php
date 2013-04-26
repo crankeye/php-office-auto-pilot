@@ -12,9 +12,6 @@
 	$api_app_id		= 'X_XXXX_XXXXXXXXX';
 	$api_key		= 'YYYYYYYYYYYYYYY';
 	
-	$api_app_id		= '2_6929_5UKXHLfmO';
-	$api_key		= 'sAewFzG7N2m4sMn';
-	
 	//INCLUDES
 	include('oap-php-api.php');
 	$oap = new OAPAPI($api_app_id,$api_key);
