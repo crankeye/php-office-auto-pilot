@@ -3,8 +3,8 @@
 	* OAP PHP API Examples
 	* @package OAP-PHP-API
 	* @author Neal Lambert
-	* @modified by Neal Lambert 04/25/2013
-	* @api_docs https://officeautopilot.zendesk.com/forums/20723902-API
+	* @updated by Neal Lambert 04/29/2013
+	* @api https://officeautopilot.zendesk.com/forums/20723902-API
 	*/
 	
 	//Visit: https://www1.moon-ray.com/v2.4/admin.php?action=api

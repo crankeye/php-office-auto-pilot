@@ -3,14 +3,13 @@
 /**
  * Office Auto Pilot PHP API Wrapper Class
  *
- * Allows access to the Office Auto Pilot API via PHP
+ * Simplifies access to the Office Auto Pilot API
  *
- * @package: 	OAP-PHP-API
- * @author: 	Neal Lambert
- * @last_mod: 	by Neal Lambert 04/25/2013
- * @url: 		http://officeautopilot.com/
- * @api_url: 	http://officeautopilot.com/wp-content/uploads/2010/10/API_reference.pdf
- * @see_also: 	http://support.officeautopilot.com/entries/22308086-contacts-api
+ * @package 	OAP-PHP-API
+ * @author 		Neal Lambert
+ * @updated 	by Neal Lambert 04/29/2013
+ * @website 	http://officeautopilot.com/
+ * @api 		https://officeautopilot.zendesk.com/forums/20723902-API
  */
  
 class OAPAPI {
@@ -30,7 +29,9 @@ class OAPAPI {
 	
 	/**
 	* Init
-	* @desc: Search OAP for data
+	*
+	* Set the initial API setttings
+	* 
 	* @params:  $app_id, $key 
 	*/
 	
@@ -45,10 +46,13 @@ class OAPAPI {
 
 	/**
 	* Add Contact (contact)
-	* @desc: Search OAP for data
-	* @params:  $contact (array) array containing the fields, tags, and sequences to add to a new contact record
-	* @access:  public
-	* @return:  array of the updated client
+	* 
+	* Add a new contact to the database. Note: This function only supports 
+	* adding a single contact at a time.
+	*
+	* @access  public
+	* @param  $contact (array) array containing the fields, tags, and sequences to add to a new contact record
+	* @return  (SimpleXMLObject) an array of updated contact records
 	*/
 
 	public function add_contact($contact=FALSE)
@@ -84,10 +88,10 @@ class OAPAPI {
 	
 	/**
 	* Update Contact(s) (contact)
-	* @desc: Update contact(s) record(s)
-	* @params:  $contact (array) array of multiple contacts to be updated
-	* @access:  public
-	* @return:  array of updated contacts
+	*
+	* @access  public
+	* @param  $contact (array) array of multiple contacts to be updated
+	* @return  (SimpleXMLObject) array of updated contacts
 	*/
 
 	public function update_contacts($contacts=FALSE)
@@ -120,10 +124,10 @@ class OAPAPI {
 	
 	/**
 	* Delete Contact(s) (contact)
-	* @desc: Delete the select contact IDs for OAP
-	* @params:  $contact_ids (array)
-	* @access:  public
-	* @return:  a success or error message
+	*
+	* @access  public
+	* @param  $contact_ids (array) an array of OAP contact ids to be deleted
+	* @return FALSE on error or a string with a sucesss message
 	*/
 
 	public function delete_contacts($contact_ids=FALSE)
@@ -147,12 +151,12 @@ class OAPAPI {
   
 	/**
 	* Add Tags (contact)
-	* @desc: Add a tag(s) to a contact record.
-	* @access:  public
-	* @params:  $contacts (array)	= an array containing a contact id(s)
-				$tags (array)		= an array containing a list of tags(s)
-				$remove (boolean) - When set to TRUE instead removes the tag(s)
-	* @return:  (SimpleXMLObject) "result" containing each tag and the success/failure status
+	* 
+	* @access  public
+	* @param  $contacts (array)	an array containing a contact id(s)
+	* @param  $tags (array) an array containing a list of tags(s)
+	* @param  $remove (boolean)  When set to TRUE instead removes the tag(s). Mainly for internal use only.
+	* @return (SimpleXMLObject) "result" containing each tag and the success/failure status
 	*/
 
 	public function add_tags($contacts=array(),$tags=array(),$remove=FALSE)
@@ -177,11 +181,11 @@ class OAPAPI {
 	
 	/**
 	* Remove Tags (contact)
-	* @desc: Removes a tag(s) from a contact record.
-	* @access:  public
-	* @params:  $contacts (array)	= an array containing a contact id(s)
-				$tags (array)		= an array containing a list of tags(s)
-	* @return:  (SimpleXMLObject) "result" containing each tag and the success/failure status
+	* 
+	* @access public
+	* @param $contacts (array)	= an array containing a contact id(s)
+	* @param $tags (array)		= an array containing a list of tags(s)
+	* @return (SimpleXMLObject) "result" containing each tag and the success/failure status
 	*/
 
 	public function remove_tags($contacts=array(),$tags=array())
@@ -191,12 +195,12 @@ class OAPAPI {
 	
 	/**
 	* Start Sequences (contact)
-	* @desc: Starts a sequence(s) for a contact record.
-	* @access:  public
-	* @params:  $contacts (array) = an array containing a contact id with an array of tags to be added
-				e.g. array('1234' => array('Newsletter','New Client'))
-				$remove (boolean) - When set to TRUE instead removes the tag(s)
-	* @return:  (SimpleXMLObject) "result" containing each updated contact record
+	* 
+	* @access public
+	* @param $contacts (array) an array of contact ids to update
+	* @param $sequences (array) an array of sequnces ids to be added to the contact record
+	* @param $remove (boolean) when set to TRUE will instead remove the sequences. Mainly used internally.
+	* @return (SimpleXMLObject) "result" containing each updated contact record
 	*/
 
 	public function start_sequences($contacts=array(),$sequences=array(),$remove=FALSE)
@@ -208,9 +212,7 @@ class OAPAPI {
 		{
 			$data .= "<contact id='".$contact_id."'>";
 			$data .= "<Group_Tag name='Sequences and Tags'><field name='Tags'></field>";
-			
 			$data .= "<field name='Sequences'".($remove ? " action='remove'" : '').'>*/*'.implode('*/*',$sequences)."*/*</field>";
-			
 			$data .= "</Group_Tag>";
 			$data .= "</contact>";
 		}
@@ -221,12 +223,11 @@ class OAPAPI {
 	
 	/**
 	* Stop Sequences (contact)
-	* @desc: Stops a sequence(s) for a contact record.
-	* @access:  public
-	* @params:  $contacts (array) 	= an array containing a contact id(s)
-				$sequences (array) 	= an array containing a sequence id(s)
-				$remove (boolean) 	- When set to TRUE instead removes the tag(s)
-	* @return:  (SimpleXMLObject) "result" containing each updated contact record
+	* 
+	* @access public
+	* @param $contacts (array) an array of contact ids to update
+	* @param $sequences (array) an array of sequnces ids to be removed from the contact record
+	* @return (SimpleXMLObject) "result" containing each updated contact record
 	*/
 	
 	public function stop_sequences($contacts=array(),$sequences=array())
@@ -236,9 +237,11 @@ class OAPAPI {
 	
 	/**
 	* Search (contact,product,form)
-	* @desc: Search OAP for data
-	* @params:  $type (string) - contact,product,form; $patterns (array) of search queries
-	* @access:  public
+	*
+	* @access public
+	* @param $type (string) which api to search. valid strings are: contact,product,form.
+	* @param $patterns (array) (field => '', op => '', value => '') contains a field to be search, and operator for compare, and a value to compare
+	* @see https://officeautopilot.zendesk.com/entries/22308086-Contacts-API#search for a list of operators and for additional details
 	* @return:  array of contacts, or products
 	*/
 
@@ -270,10 +273,13 @@ class OAPAPI {
 	
 	/**
 	* Fetch (contact,product,form)
-	* @desc: Allows you to fetch contacts, products, and forms from OAP.
-	* @params:  $type (string) - contact,product,form; $data (array)(contact,product) or (string) for (form)
-	* @access:  public
-	* @return:  array of contacts, or products
+	* 
+	* Allows you to fetch contacts, products, and forms from OAP.
+	*
+	* @access public
+	* @param $type (string) - contact,product,form; 
+	* @param $data (array)(contact,product) or (string) for (form)
+	* @return  array of contacts, or products
 	*/
 
 	public function fetch($type=FALSE,$data=FALSE)
@@ -308,9 +314,11 @@ class OAPAPI {
 	
 	/**
 	* Fetch Tags Type (contact)
-	* @desc: List of tag names in the account. Recommended to use Pull Tag instead of this function.
-	* @access:  public
-	* @return:  array of tags
+	* 
+	* Returns a list of all tag names in the account. Recommended to use "Pull Tag" instead of this function.
+	* 
+	* @access public
+	* @return (SimpleXMLObject) array of tags
 	*/
 
 	public function fetch_tags_type()
@@ -329,9 +337,9 @@ class OAPAPI {
 	
 	/**
 	* Fetch Sequences Type (contact)
-	* @desc: Gets a list of available sequences.
-	* @access:  public
-	* @return:  array of sequences e.g. [24] =>  'sequence name which has id 24'
+	* 
+	* @access public
+	* @return (SimpleXMLObject)  array of sequences e.g. [24] =>  'sequence name which has id 24'
 	*/
 
 	public function fetch_sequences_type()
@@ -353,10 +361,12 @@ class OAPAPI {
 	
 	/**
 	* Key Type (contact, product)
-	* @desc: The Key Type is used to visually map out all the fields that are used for a contact on your system. The
-			 fields are organized in groups.
-	* @access:  public
-	* @return:  array of tags
+	* 
+	* The Key Type is used to visually map out all the fields that are used for a contact on your system. The
+	* fields are organized in groups.
+	* 
+	* @access public
+	* @return (SimpleXMLObject) array of tags
 	*/
 
 	public function key_type($type=FALSE)
@@ -371,9 +381,11 @@ class OAPAPI {
 	
 	/**
 	* Pull Tag (contact)
-	* @desc: List of tag names in the account with corresponding ids
-	* @access:  public
-	* @return:  array of tags
+	* 
+	* List of tag names in the account with corresponding ids
+	* 
+	* @access public
+	* @return (SimpleXMLObject) array of tags
 	*/
 
 	public function pull_tag()
@@ -390,11 +402,13 @@ class OAPAPI {
 	}
 	
 	/**
-	* (Private) Service
-	* @desc: Checks to see if the service name is valid and returns the service URL
-	* @params: $key (string)
-	* @access:  private
-	* @return:  object
+	* Verify Service
+	* 
+	* Checks to see if the API service name is valid and returns the corresponding service URL
+	* 
+	* @access private
+	* @param $key (string) the service name to be checked
+	* @return (string)
 	*/
 	
 	private function _service($key)
@@ -426,16 +440,24 @@ class OAPAPI {
 	}
    
 	/**
-	* (Private) Request
-	* @desc: Make a request to the Office Auto Pilot XML Rest API
-	* @params: $service (string),$reqType (string), $data_xml (string),$return_id (boolean), $f_add(boolean)
-	* @access:  private
+	* Request
+	* 
+	* Make a request to the Office Auto Pilot XML Rest API
+	* 
+	* @access private
+	* @param $service (string) main API service URL
+	* @param $reqType (string) which function to use
+	* @param $data_xml (xml) the xml to send
+	* @param $return_id (boolean) 1 returns full record(s) in addtion to the success/fail message. 
+	*                             2 returns the contact id an date last modified in addtion to the success/fail message.
+	* @param $f_add (boolean) when set, forces a new contact to be added (regardless if a contact with a matching email address is found).
+	*                         Note: "Add" requests initialize this to true, "update" requests initialize it to false.
 	* @return:  object
 	*/
 
 	private function _request($service,$reqType,$data=FALSE,$return_id=FALSE,$f_add=FALSE)
 	{	
-		$postargs = "Appid=".$this->Appid."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=1' : '&return_id=1').($data ? '&data='.rawurlencode($data) : '').($f_add ? '&f_add=1' : '');
+		$postargs = "Appid=".$this->Appid."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=2' : '&return_id=1').($data ? '&data='.rawurlencode($data) : '').($f_add ? '&f_add=1' : '');
 		
 		//print_r($postargs);
 		
