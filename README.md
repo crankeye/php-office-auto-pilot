@@ -1,11 +1,11 @@
-PHP Office Auto Pilot API Wrapper
+Office Auto Pilot PHP API Wrapper
 =====================
 
-A PHP version of the Office Auto Pilot API.
+Simplifies access to the Office Auto Pilot API using PHP.
 
 Installation
 ------------
-Download "oap-php-api.php" and add the following code to your project:
+Download "OAPAPI.php" and add the following code to your project:
 
     //INCLUDES
     include('path/to/OAPAPI.php');
@@ -17,6 +17,8 @@ Download "oap-php-api.php" and add the following code to your project:
 
 - Change the $api_app_id and $api_key to your app_id/key. See "Setttings -> Developer Preferences and Resources -> OfficeAutoPilot API Instructions and Key Manager" or vist: https://www1.moon-ray.com/v2.4/admin.php?action=api
 - Make sure your app_id/key has the correct permissions. 
+
+See the examples.php for a list of examples.
 
 List of Supported Functions
 ---------------------------
