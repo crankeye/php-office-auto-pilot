@@ -1,9 +1,12 @@
 <?php
 	/**
-	* OAP PHP API Examples
+	* OAP PHP API Examples (OAP-PHP-API)
+	*
+	* Contains examples for each function.
+	*
 	* @package OAP-PHP-API
 	* @author Neal Lambert
-	* @updated by Neal Lambert 04/29/2013
+	* @updated by Neal Lambert 05/06/2013
 	* @api https://officeautopilot.zendesk.com/forums/20723902-API
 	*/
 	
@@ -13,8 +16,8 @@
 	$api_key		= 'YYYYYYYYYYYYYYY';
 	
 	//INCLUDES
-	include('oap-php-api.php');
-	$oap = new OAPAPI($api_app_id,$api_key);
+	include('OAPAPI.php');
+	$oap = new OAPAPI(array('AppID' => $api_app_id,'Key' => $api_key));
 	
 	echo '<pre>';
 	
