@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Office Auto Pilot PHP API Wrapper Class
+ * Office Auto Pilot PHP API Wrapper Class (OAP-PHP-API)
  *
  * Simplifies access to the Office Auto Pilot API
  *
  * @package 	OAP-PHP-API
  * @author 		Neal Lambert
- * @updated 	by Neal Lambert 04/29/2013
+ * @updated 	by Neal Lambert 05/06/2013
  * @website 	http://officeautopilot.com/
  * @api 		https://officeautopilot.zendesk.com/forums/20723902-API
  */
@@ -15,7 +15,7 @@
 class OAPAPI {
   
 	//API CREDENTIALS
-	var $Appid		= '';
+	var $AppID		= '';
 	var $Key		= '';
 
 	//API URL
@@ -32,16 +32,16 @@ class OAPAPI {
 	*
 	* Set the initial API setttings
 	* 
-	* @params:  $app_id, $key 
+	* @param: $params (array) - must contain the key 'AppID' and 'Key'
 	*/
 	
-	function __construct($app_id=FALSE,$key=FALSE)
+	function __construct($params)
 	{
-		if(empty($app_id) OR empty($key))
+		if(empty($params['AppID']) OR empty($params['Key']))
 			throw new Exception("Missing OAP API Appid or Key");
 		
-		$this->Appid	= $app_id;
-		$this->Key		= $key;
+		$this->AppID	= $params['AppID'];
+		$this->Key		= $params['Key'];
 	}
 
 	/**
@@ -457,7 +457,7 @@ class OAPAPI {
 
 	private function _request($service,$reqType,$data=FALSE,$return_id=FALSE,$f_add=FALSE)
 	{	
-		$postargs = "Appid=".$this->Appid."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=2' : '&return_id=1').($data ? '&data='.rawurlencode($data) : '').($f_add ? '&f_add=1' : '');
+		$postargs = "Appid=".$this->AppID."&Key=".$this->Key."&reqType=".$reqType.($return_id ? '&return_id=2' : '&return_id=1').($data ? '&data='.rawurlencode($data) : '').($f_add ? '&f_add=1' : '');
 		
 		//print_r($postargs);
 		
